@@ -1,0 +1,36 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/guide-courses
+  datasource:
+    url: jdbc:postgresql://localhost:5432/coursesdb
+    username: myuser
+    password: mypassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+keycloak:
+  auth-server-url: http://localhost:8080
+  realm: guide-courses
+  client-id: confidential-client
+  client-secret: 9IiLBgtMdHK15xIsHSmDxdzLESB4pJEX
+
+app:
+  keycloak:
+    token-url: "${keycloak.auth-server-url}/realms/${keycloak.realm}/protocol/openid-connect/token"
+
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springdoc: DEBUG
