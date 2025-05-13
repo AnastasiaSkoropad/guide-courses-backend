@@ -4,14 +4,24 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/realms/guide-courses
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/coursesdb
-    username: myuser
-    password: mypassword
+    url:               jdbc:postgresql://localhost:5432/coursesdb
+    username:          myuser
+    password:          mypassword
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
+
+  # ↓↓↓ Ось що додано для Elasticsearch ↓↓↓
+  elasticsearch:
+    # якщо ви підняли ES на своєму комп’ютері через Docker Compose — за замовчуванням порт 9200
+    uris: http://localhost:9200
+    # якщо у вашому кластері захист, можна вказати:
+    # username: elastic
+    # password: changeme
 
 springdoc:
   swagger-ui:
@@ -19,9 +29,9 @@ springdoc:
 
 keycloak:
   auth-server-url: http://localhost:8080
-  realm: guide-courses
-  client-id: confidential-client
-  client-secret: 9IiLBgtMdHK15xIsHSmDxdzLESB4pJEX
+  realm:           guide-courses
+  client-id:       confidential-client
+  client-secret:   9IiLBgtMdHK15xIsHSmDxdzLESB4pJEX
 
 app:
   keycloak:
@@ -33,4 +43,4 @@ server:
 logging:
   level:
     org.springframework.security: DEBUG
-    org.springdoc: DEBUG
+    org.springdoc:               DEBUG
