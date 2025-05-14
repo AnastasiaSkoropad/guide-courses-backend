@@ -35,8 +35,8 @@ public class SecurityConfig {
 
                         // Public GET endpoints для курсів, категорій, напрямів, тем і коментарів
                         .requestMatchers(HttpMethod.GET,
-                                "/api/courses**",
-                                "/api/categories**",
+                                "/api/courses/**",
+                                "/api/categories/**",
                                 "/api/categories/*/directions**",
                                 "/api/directions/*/topics**",
                                 "/api/courses/*/comments**"

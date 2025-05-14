@@ -9,9 +9,14 @@ spring:
     username: myuser
     password: mypassword
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
+
+  elasticsearch:
+    uris: http://localhost:9200
+    socket-timeout: 30s
 
 springdoc:
   swagger-ui:
@@ -19,9 +24,9 @@ springdoc:
 
 keycloak:
   auth-server-url: http://localhost:8080
-  realm: guide-courses
-  client-id: confidential-client
-  client-secret: 9IiLBgtMdHK15xIsHSmDxdzLESB4pJEX
+  realm:           guide-courses
+  client-id:       confidential-client
+  client-secret:   9IiLBgtMdHK15xIsHSmDxdzLESB4pJEX
 
 app:
   keycloak:
@@ -33,4 +38,4 @@ server:
 logging:
   level:
     org.springframework.security: DEBUG
-    org.springdoc: DEBUG
+    org.springdoc:               DEBUG

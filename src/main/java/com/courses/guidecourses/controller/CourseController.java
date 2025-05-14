@@ -2,7 +2,9 @@ package com.courses.guidecourses.controller;
 
 import com.courses.guidecourses.dto.CourseDto;
 import com.courses.guidecourses.dto.CreateCourseDto;
+import com.courses.guidecourses.dto.SuggestionDto;
 import com.courses.guidecourses.dto.UpdateCourseDto;
+import com.courses.guidecourses.service.CourseSearchService;
 import com.courses.guidecourses.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;
+    private final CourseSearchService searchService;
 
     @GetMapping
     public Page<CourseDto> list(
@@ -60,6 +63,19 @@ public class CourseController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         courseService.delete(id);
+    }
+
+    @GetMapping("/search")
+    public Page<CourseDto> search(
+            @RequestParam String q,
+            @PageableDefault(size = 10, sort = "title", direction = Sort.Direction.ASC)
+            Pageable pageable) {
+        return searchService.search(q, pageable);
+    }
+
+    @GetMapping("/suggest")
+    public SuggestionDto suggest(@RequestParam("q") String q) {
+        return searchService.suggest(q);
     }
 }
 
