@@ -9,6 +9,7 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
@@ -17,6 +18,8 @@ public interface CourseDocumentMapper {
     @Mapping(target = "topics",     ignore = true)
     CourseDocument toDocument(Course course);
 
+    @Mapping(target="directionIds", source="directionIds")
+    @Mapping(target="topicIds",     source="topicIds")
     CourseDto toDto(CourseDocument doc);
 
     @AfterMapping
@@ -35,4 +38,3 @@ public interface CourseDocumentMapper {
         );
     }
 }
-

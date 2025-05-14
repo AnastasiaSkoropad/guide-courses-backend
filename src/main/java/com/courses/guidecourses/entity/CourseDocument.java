@@ -12,6 +12,8 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.core.suggest.Completion;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -37,8 +39,23 @@ public class CourseDocument {
   @Field(type = FieldType.Text)
   private Set<String> topics;
 
+  @Field(type = FieldType.Long)
+  private Set<Long> directionIds;
+
+  @Field(type = FieldType.Long)
+  private Set<Long> topicIds;
+
   @CompletionField(maxInputLength = 100)
   private Completion titleSuggest;
+
+  @Field(type = FieldType.Keyword)
+  private String previewUrl;
+
+  @Field(type = FieldType.Double)
+  private BigDecimal price;
+
+  @Field(type = FieldType.Date)
+  private Instant createdAt;
 
   @CompletionField(maxInputLength = 100)
   private Completion directionSuggest;

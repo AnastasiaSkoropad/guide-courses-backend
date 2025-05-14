@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +40,10 @@ public class CourseSearchService {
   /** Індексувати або оновити документ */
   public void indexCourse(Course saved) {
     CourseDocument doc = mapper.toDocument(saved);
+
+    doc.setPreviewUrl(saved.getPreviewUrl());
+    doc.setCreatedAt(saved.getCreatedAt());
+    doc.setPrice(saved.getPrice());
     doc.setTitleSuggest(new Completion(new String[]{ saved.getTitle() }));
     doc.setDirectionSuggest(new Completion(
             saved.getDirections().stream()
@@ -50,6 +55,16 @@ public class CourseSearchService {
                     .map(Topic::getTitle)
                     .toArray(String[]::new)
     ));
+    doc.setDirectionIds(
+            saved.getDirections().stream()
+                    .map(Direction::getId)
+                    .collect(Collectors.toSet())
+    );
+    doc.setTopicIds(
+            saved.getTopics().stream()
+                    .map(Topic::getId)
+                    .collect(Collectors.toSet())
+    );
     operations.save(doc);
   }
 
@@ -81,38 +96,52 @@ public class CourseSearchService {
     return new PageImpl<>(dtos, pageable, hits.getTotalHits());
   }
 
-  public SuggestionDto suggest(String prefix){
-      SearchResponse<CourseDocument> resp = null;
-      try {
-          resp = client.search(r -> r
-                          .index("courses")
-                          .suggest(s -> s
-                                  .suggesters("byTitle",     sg -> sg.prefix(prefix)
-                                          .completion(c -> c.field("titleSuggest")
-                                                  .skipDuplicates(true)
-                                                  .size(10)))
-                                  .suggesters("byDirection", sg -> sg.prefix(prefix)
-                                          .completion(c -> c.field("directionSuggest")
-                                                  .skipDuplicates(true)
-                                                  .size(10)))
-                                  .suggesters("byTopic",     sg -> sg.prefix(prefix)
-                                          .completion(c -> c.field("topicSuggest")
-                                                  .skipDuplicates(true)
-                                                  .size(10)))
-                          ),
-                  CourseDocument.class
-          );
-      } catch (IOException e) {
-        throw new IllegalStateException("Failed to fetch suggestions from Elasticsearch", e);
-      }
+  public SuggestionDto suggest(String prefix) {
+    SearchResponse<CourseDocument> resp = null;
+    try {
+      resp = client.search(r -> r
+                      .index("courses")
+                      .source(src -> src.fetch(false))
+                      .suggest(s -> s
+                              .suggesters("byTitle", sg -> sg
+                                      .prefix(prefix)
+                                      .completion(c -> c
+                                              .field("titleSuggest")
+                                              .skipDuplicates(true)
+                                              .size(10)
+                                      )
+                              )
+                              .suggesters("byDirection", sg -> sg
+                                      .prefix(prefix)
+                                      .completion(c -> c
+                                              .field("directionSuggest")
+                                              .skipDuplicates(true)
+                                              .size(10)
+                                      )
+                              )
+                              .suggesters("byTopic", sg -> sg
+                                      .prefix(prefix)
+                                      .completion(c -> c
+                                              .field("topicSuggest")
+                                              .skipDuplicates(true)
+                                              .size(10)
+                                      )
+                              )
+                      ),
+              CourseDocument.class
+      );
+    } catch (IOException e) {
+      throw new IllegalStateException("Failed to fetch suggestions from Elasticsearch", e);
+    }
 
-      Map<String, ? extends List<? extends Suggestion<?>>> suggestMap = resp.suggest();
+    Map<String, ? extends List<? extends Suggestion<?>>> suggestMap = resp.suggest();
     List<String> titles = extract(suggestMap, "byTitle");
     List<String> dirs   = extract(suggestMap, "byDirection");
     List<String> topics = extract(suggestMap, "byTopic");
 
     return new SuggestionDto(titles, dirs, topics);
   }
+
 
   private static List<String> extract(
           Map<String, ? extends List<? extends Suggestion<?>>> suggestions,
