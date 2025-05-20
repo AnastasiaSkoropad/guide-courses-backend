@@ -51,6 +51,9 @@ public class CourseDocument {
   @Field(type = FieldType.Keyword)
   private String previewUrl;
 
+  @Field(type = FieldType.Keyword)
+  private String originCourseUrl;
+
   @Field(type = FieldType.Double)
   private BigDecimal price;
 

@@ -9,6 +9,7 @@ public record CourseDto(
     String title,
     String description,
     String previewUrl,
+    String originCourseUrl,
     BigDecimal price,
     Set<Long> directionIds,
     Set<Long> topicIds,

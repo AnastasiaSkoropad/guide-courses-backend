@@ -42,6 +42,7 @@ public class CourseSearchService {
     CourseDocument doc = mapper.toDocument(saved);
 
     doc.setPreviewUrl(saved.getPreviewUrl());
+    doc.setOriginCourseUrl(saved.getOriginCourseUrl());
     doc.setCreatedAt(saved.getCreatedAt());
     doc.setPrice(saved.getPrice());
     doc.setTitleSuggest(new Completion(new String[]{ saved.getTitle() }));

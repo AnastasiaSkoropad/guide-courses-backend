@@ -45,6 +45,9 @@ public class Course {
     @Column(name = "preview_url", length = 500)
     private String previewUrl;
 
+    @Column(name = "origin_course_url", length = 500)
+    private String originCourseUrl;
+
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 

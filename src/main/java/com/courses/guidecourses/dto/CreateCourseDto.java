@@ -9,5 +9,6 @@ public record CreateCourseDto(
     Set<Long> directionIds,
     Set<Long> topicIds,
     String previewUrl,
+    String originCourseUrl,
     BigDecimal price
 ) {}

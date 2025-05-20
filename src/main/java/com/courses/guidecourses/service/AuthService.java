@@ -48,7 +48,6 @@ public class AuthService {
             return resp.getBody();
 
         } catch (ResourceAccessException ex) {
-            // не змогли достукатися до Keycloak
             throw new AuthException("AUTH_SERVER_UNAVAILABLE",
                     "Authentication server is unreachable. Please try later.",
                     ex);
