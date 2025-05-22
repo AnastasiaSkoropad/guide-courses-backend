@@ -48,7 +48,7 @@ public class Course {
     @Column(name = "origin_course_url", length = 500)
     private String originCourseUrl;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private BigDecimal price;
 
     @Column(name = "created_at", nullable = false, updatable = false)
